@@ -337,12 +337,16 @@ cfg_if! {
         /// The `SerialPortInfo` struct contains the name of the port
         /// which can be used for opening it.
         pub fn available_ports() -> Result<Vec<SerialPortInfo>> {
+            println!("Hallo");
             let mut vec = Vec::new();
             if let Ok(context) = libudev::Context::new() {
                 let mut enumerator = libudev::Enumerator::new(&context)?;
                 enumerator.match_subsystem("tty")?;
                 let devices = enumerator.scan_devices()?;
                 for d in devices {
+                    println!("serialport avalaible ports: Driver: {:?}", &d.driver());
+                    println!("serialport avalaible ports: Devnode: {:?}", &d.devnode());
+                    println!("serialport avalaible ports: port_type: {:?}", port_type(&d));
                     if let Some(p) = d.parent() {
                         if let Some(devnode) = d.devnode() {
                             if let Some(path) = devnode.to_str() {
